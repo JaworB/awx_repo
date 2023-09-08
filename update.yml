@@ -9,21 +9,21 @@
     - name: Check if {{ bridge_name }} is active
       shell: nmcli connection show --active |grep int | awk '{print $1}'
       register: nmcli_command_result
-      when: additional_bridge is true
+      when: "{{ additional_bridge }}" is true
 
     - name: Start internal bridge
       command:
         cmd: nmcli con up int_bridge
       when: 
-        - additional_bridge is true  
-        - bridge_name not in nmcli_command_result.stdout
+        - "{{ additional_bridge }}" is true  
+        - "{{ bridge_name }}" not in nmcli_command_result.stdout
     
     - name: Ensure that vms are running
       community.libvirt.virt:
         name: "{{ item }}"
         state: running
       with_inventory_hostnames:
-        - infra
+        - test_hosts
 
 - name: Upgrade all hosts
   hosts: test_hosts
