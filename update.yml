@@ -37,7 +37,7 @@
         timeout: 300
           
     - name: Sync /etc/hosts file on hosts
-      copy:
+      synchronize:
         src: /etc/hosts
         dest: /etc/hosts
       when: sync_etc_hosts == true
