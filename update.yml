@@ -41,6 +41,7 @@
         src: /etc/hosts
         dest: /etc/hosts
       when: sync_etc_hosts == true
+      delegate_to: sandbox
 
     - name: Upgrade all packages to latest version
       dnf:
