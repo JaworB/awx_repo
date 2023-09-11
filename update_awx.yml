@@ -9,13 +9,13 @@
     - name: Check if {{ bridge_name }} is active
       shell: nmcli connection show --active |grep int | awk '{print $1}'
       register: nmcli_command_result
-      when: additional_bridge == true
+      when: additional_bridge is true
 
     - name: Start internal bridge
       command:
         cmd: nmcli con up int_bridge
       when: 
-        - additional_bridge == true  
+        - additional_bridge is true  
         - bridge_name not in nmcli_command_result.stdout
     
     - name: Ensure that vms are running
@@ -23,26 +23,31 @@
         name: "{{ item }}"
         state: running
       with_inventory_hostnames:
-        - test_hosts
+        - infra
 
-- name: Upgrade all hosts
-  hosts: test_hosts
+- name: Check if systems are up and running
+  hosts: all
   gather_facts: no
-  vars:
-    sync_etc_hosts: true
   tasks:
     - name: Verify if hosts are up and running
       wait_for_connection:
         delay: 5
         timeout: 300
-          
-    - name: Sync /etc/hosts file on hosts
+
+- name: Sync /etc/hosts form sandbox
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Sync /etc/hosts
       synchronize:
         src: /etc/hosts
         dest: /etc/hosts
-      when: sync_etc_hosts == true
       delegate_to: sandbox
-
+      
+- name: Update hosts
+  hosts: all
+  gather_facts: not
+  tasks:
     - name: Upgrade all packages to latest version
       dnf:
         name: "*"
@@ -60,7 +65,7 @@
       when: update.changed
 
 - name: Shutdown testhosts
-  hosts: test_hosts
+  hosts: testhosts
   gather_facts: no
   tasks:
     - name: Shutdown

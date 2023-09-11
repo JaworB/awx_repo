@@ -1,0 +1,13 @@
+---
+- name: Update prepare
+  hosts: ans1
+  gather_facts: no
+  tasks:
+    - name: Sync /etc/hosts
+      synchronize:
+        src: /etc/hosts
+        dest: /etc/hosts
+        #mode: pull
+      delegate_to: sandbox
+
+    
