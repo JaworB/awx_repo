@@ -45,7 +45,7 @@
       delegate_to: sandbox
 
 - name: Update hosts
-  hosts: all
+  hosts: all, sandbox
   gather_facts: not
   tasks:
     - name: Upgrade all packages to latest version
