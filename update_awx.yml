@@ -27,11 +27,7 @@
         name: "{{ item }}"
         state: running
       with_inventory_hostnames:
-        - all
-
-    - name: debug
-      debug:
-        msg: widze {{ with_inventory_hostnames }}
+        - infra
 
 - name: Check if systems are up and running
   hosts: all
