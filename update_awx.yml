@@ -17,6 +17,10 @@
       when: 
         - additional_bridge == true  
         - bridge_name not in nmcli_command_result.stdout
+
+    - name: debug
+      debug:
+        msg: widze {{ with_inventory_hostnames }}
     
     - name: Ensure that vms are running
       community.libvirt.virt:
