@@ -9,13 +9,13 @@
     - name: Check if {{ bridge_name }} is active
       shell: nmcli connection show --active |grep int | awk '{print $1}'
       register: nmcli_command_result
-      when: additional_bridge is true
+      when: additional_bridge == true
 
     - name: Start internal bridge
       command:
         cmd: nmcli con up int_bridge
       when: 
-        - additional_bridge is true  
+        - additional_bridge == true  
         - bridge_name not in nmcli_command_result.stdout
     
     - name: Ensure that vms are running
@@ -43,7 +43,7 @@
         src: /etc/hosts
         dest: /etc/hosts
       delegate_to: sandbox
-      
+
 - name: Update hosts
   hosts: all
   gather_facts: not
