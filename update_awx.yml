@@ -23,7 +23,11 @@
         name: "{{ item }}"
         state: running
       with_inventory_hostnames:
-        - infra
+        - all
+
+    - name: debug
+      debug:
+        msg: widze {{ with_inventory_hostnames }}
 
 - name: Check if systems are up and running
   hosts: all
@@ -46,7 +50,7 @@
 
 - name: Update hosts
   hosts: all, !sandbox
-  gather_facts: not
+  gather_facts: no
   tasks:
     - name: Upgrade all packages to latest version
       dnf:
