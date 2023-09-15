@@ -45,7 +45,7 @@
       delegate_to: sandbox
 
 - name: Update hosts
-  hosts: all, !sandbox
+  hosts: all
   gather_facts: no
   tasks:
     - name: Upgrade all packages to latest version
@@ -54,19 +54,17 @@
         state: latest 
       register: update
 
+- name: Reboot and shutdown hosts
+  hosts: all, !sandbox, !ansible_hosts
+  gather_facts: no
+  tasks:
     - name: Reboot updated hosts
       reboot:
-      when: update.changed
     
     - name: Wait for host startup after reboot
       wait_for_connection:
         delay: 10
         timeout: 300
-      when: update.changed
-
-- name: Shutdown testhosts
-  hosts: testhosts
-  gather_facts: no
-  tasks:
+          
     - name: Shutdown
       community.general.shutdown:
