@@ -55,7 +55,7 @@
       register: update
 
 - name: Reboot and shutdown hosts
-  hosts: all, !sandbox, !ansible_host
+  hosts: testhosts
   gather_facts: no
   tasks:
     - name: Reboot updated hosts
