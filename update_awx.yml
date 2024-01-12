@@ -53,6 +53,7 @@
         name: "*"
         state: latest 
       register: update
+  ignore_errors: true
 
 - name: Reboot and shutdown hosts
   hosts: testhosts
